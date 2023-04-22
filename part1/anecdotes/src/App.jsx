@@ -13,11 +13,9 @@ function App() {
     "The only way to go fast, is to go well.",
   ];
 
-  const points = Array(anecdotes.length - 1).fill(0);
-
+  const points = Array(anecdotes.length).fill(0);
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(points);
-  const [mostVotted,setMostVotted] = useState(0)
   const getRandomNumber = () => {
     return Math.floor(Math.random() * anecdotes.length);
   };
@@ -47,6 +45,7 @@ function App() {
       <br />
       <h1>Anecdote with most votes</h1>
       <p>{anecdotes[getMax()]}</p>
+      <p>has {votes[getMax()]} votes</p>
     </div>
   );
 }
