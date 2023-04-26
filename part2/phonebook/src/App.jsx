@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import { List } from "./List";
+import { Notification } from "./Notification";
+import { Error } from "./Error";
 
 import PersonService from "./services/PersonService";
 import { Form } from "./Form";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     PersonService.getAll().then((initialPersons) => setPersons(initialPersons));
@@ -27,6 +31,8 @@ const App = () => {
     if (persons.find((person) => person.name == newPerson.name) == null) {
       PersonService.create(newPerson).then((created) => {
         setPersons([...persons, created]);
+        setMessage("Person was added successfully");
+        setTimeout(()=>setMessage(""),5000)
       });
       return;
     }
@@ -43,19 +49,32 @@ const App = () => {
       setPersons(
         persons.map((person) => (person.id != updated.id ? person : updated))
       );
-    });
+      setMessage("Information updated successfully")
+      setTimeout(()=>setMessage(""),5000);
+    })
+    .catch(error=>{
+      setError("There was a problem during updating");
+      setTimeout(()=>setError(""),5000)
+    })
   };
 
   const handleDelete = (id) => {
-    window.confirm(`Are you sure you want to delete person with id ${id}`);
+    const person = persons.find(person=>person.id ==id)
+    window.confirm(`Are you sure you want to delete  ${person.name}`);
     PersonService.remove(id).then((removed) => {
       setPersons(persons.filter((person) => person.id != id));
-    });
+    })
+    .catch(error=>{
+      setError(`Information from ${person.name} has already been removed`);
+      setTimeout(()=>setError(""),5000)
+    })
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message}/>
+      <Error error={error}/>
       <p>
         Filter shown with
         <input
