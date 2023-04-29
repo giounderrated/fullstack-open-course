@@ -4,7 +4,7 @@ const cors = require('cors')
 
 const app = express();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3001
 
 morgan.token('body', (request,response)=>{
   const body  = request.body ? request.body : {} 
