@@ -33,7 +33,11 @@ const App = () => {
         setPersons([...persons, created]);
         setMessage("Person was added successfully");
         setTimeout(()=>setMessage(""),5000)
-      });
+      })
+      .catch(error=>{
+        setError(error.response.data.error)
+        setTimeout(()=>setError(""),5000)
+      })
       return;
     }
     const confirm = window.confirm(
