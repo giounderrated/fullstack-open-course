@@ -28,29 +28,27 @@ const totalLikes = (blogs) => {
 };
 
 const favoriteBlog = (blogs) =>{
-  const max = Math.max(...blogs.map(blog=> blog.likes))
-  const favorite = blogs.find(blog=>blog.likes==max);
-  return {
-    title:favorite.title,
-    author:favorite.author,
-    likes:favorite.likes
-  }
+  const max =blogs.reduce((prev,current)=>{
+    return prev.likes>current.likes ? prev:current
+  },{})
+  return max
 }
 
 const mostBlogs = (blogs) => {
   const groupByAuthor = blogs.reduce((group, blog) => {
     const { author } = blog;
-      group[author] = group[author] ?? {};
-      const blogs = group[author].blogs ?? 0;
-      group[author].author = author;
-      group[author].blogs = blogs +1;
+      if (!group[author]) {
+        group[author] = { author, blogs: 0 };
+      }
+    group[author].blogs++;
     return group;
   }, []);
   const authors = Object.values(groupByAuthor)
+  console.log(authors)
   const max = authors.reduce((prev, current)=>{
     return prev.blogs > current.blogs ? prev : current
   },{})
-  return max;
+  return max;  
 }
 
 module.exports = {
