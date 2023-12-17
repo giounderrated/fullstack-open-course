@@ -9,7 +9,7 @@ const mongoose = require('mongoose')
 
 
 const blogsRouter = require("./controllers/Blog.controller");
-const BLOGS_PATH = "/api/v1/blogs/";
+const BLOGS_PATH = "/api/blogs/";
 
 app.use(cors());
 app.use(express.static("build"));

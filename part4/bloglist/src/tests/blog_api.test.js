@@ -4,7 +4,7 @@ const app = require("../app");
 const api = supertest(app);
 const Blog = require("../models/Blog.model");
 const { initialBlogs } = require("../utils/ListHelper");
-const BLOGS_ENDPOINT = "/api/v1/blogs/";
+const BLOGS_ENDPOINT = "/api/blogs/";
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -65,6 +65,30 @@ test("blog without title is not added", async () => {
   const response = await api.get(BLOGS_ENDPOINT);
   expect(response.body).toHaveLength(initialBlogs.length);
 });
+
+test("blogs have a unique identifier called id", async()=>{
+  const response = await api.get(BLOGS_ENDPOINT)
+  const blogs = response.body
+  expect(blogs).toBeDefined()
+
+  blogs.forEach((blog)=>{
+    expect(blog.id).toBeDefined()
+  })
+})
+
+test("Given missing likes property then set default value to 0",async ()=>{
+  const newBlog = {
+    title:"Title",
+    author: "Edsger W. Dijkstra",
+    url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+  };
+
+  await api
+    .post(BLOGS_ENDPOINT)
+    .send(newBlog)
+  const response = await api.get(BLOGS_ENDPOINT);
+  expect(response.body).toHaveLength(initialBlogs.length + 1);
+})
 
 afterAll(async () => {
   await mongoose.connection.close();
