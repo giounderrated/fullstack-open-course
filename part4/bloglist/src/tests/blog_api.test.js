@@ -77,17 +77,28 @@ test("blogs have a unique identifier called id", async()=>{
 })
 
 test("Given missing likes property then set default value to 0",async ()=>{
-  const newBlog = {
+  const blogWithNoLikesProperty = {
     title:"Title",
     author: "Edsger W. Dijkstra",
     url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
   };
 
-  await api
+  const response = await api
     .post(BLOGS_ENDPOINT)
-    .send(newBlog)
-  const response = await api.get(BLOGS_ENDPOINT);
-  expect(response.body).toHaveLength(initialBlogs.length + 1);
+    .send(blogWithNoLikesProperty)
+  expect(response.body.likes).toBe(0)
+})
+
+
+test("Given missing title or url properties then return 400",async()=>{
+  const blogWithNoUrlProperty = {
+    title:"Title",
+    author: "Edsger W. Dijkstra",
+  }
+  await api
+  .post(BLOGS_ENDPOINT)
+  .send(blogWithNoUrlProperty)
+  .expect(400)
 })
 
 afterAll(async () => {
