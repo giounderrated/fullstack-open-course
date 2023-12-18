@@ -3,14 +3,14 @@ const supertest = require("supertest");
 const app = require("../app");
 const api = supertest(app);
 const Blog = require("../models/Blog.model");
-const { initialBlogs } = require("../utils/ListHelper");
+const { initialBlogs } = require("../utils/list_helper");
 const BLOGS_ENDPOINT = "/api/blogs/";
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  const blogsObjects = initialBlogs.map(blog=> new Blog(blog));
-  const promiseArray = blogsObjects.map(blog=>blog.save());
-  await Promise.all(promiseArray)
+  const blogsObjects = initialBlogs.map((blog) => new Blog(blog));
+  const promiseArray = blogsObjects.map((blog) => blog.save());
+  await Promise.all(promiseArray);
 });
 
 test("blogs are returned as json", async () => {
@@ -66,48 +66,96 @@ test("blog without title is not added", async () => {
   expect(response.body).toHaveLength(initialBlogs.length);
 });
 
-test("blogs have a unique identifier called id", async()=>{
-  const response = await api.get(BLOGS_ENDPOINT)
-  const blogs = response.body
-  expect(blogs).toBeDefined()
+test("blogs have a unique identifier called id", async () => {
+  const response = await api.get(BLOGS_ENDPOINT);
+  const blogs = response.body;
+  expect(blogs).toBeDefined();
 
-  blogs.forEach((blog)=>{
-    expect(blog.id).toBeDefined()
-  })
-})
+  blogs.forEach((blog) => {
+    expect(blog.id).toBeDefined();
+  });
+});
 
-test("Given missing likes property then set default value to 0",async ()=>{
+test("Given missing likes property then set default value to 0", async () => {
   const blogWithNoLikesProperty = {
-    title:"Title",
+    title: "Title",
     author: "Edsger W. Dijkstra",
     url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
   };
 
-  const response = await api
-    .post(BLOGS_ENDPOINT)
-    .send(blogWithNoLikesProperty)
-  expect(response.body.likes).toBe(0)
-})
+  const response = await api.post(BLOGS_ENDPOINT).send(blogWithNoLikesProperty);
+  expect(response.body.likes).toBe(0);
+});
 
-test("Given missing title or url properties then return 400",async()=>{
+test("Given missing title or url properties then return 400", async () => {
   const blogWithNoUrlProperty = {
-    title:"Title",
+    title: "Title",
     author: "Edsger W. Dijkstra",
-  }
-  await api
-  .post(BLOGS_ENDPOINT)
-  .send(blogWithNoUrlProperty)
-  .expect(400)
-})
+  };
+  await api.post(BLOGS_ENDPOINT).send(blogWithNoUrlProperty).expect(400);
+});
 
-describe("Deletion of a blog post",()=>{
-  test("given id then return status code 200", async()=>{
-    const id = initialBlogs[0]._id;
-    await api
-    .delete(`${BLOGS_ENDPOINT}/${id}`)
+describe("Deletion of a blog post", () => {
+  test("Success with 204 status code when valid id", async () => {
+    const result = await api
+    .get(BLOGS_ENDPOINT)
     .expect(200)
+
+    const blogToDelete = result.body[0];
+    await api.delete(`${BLOGS_ENDPOINT}/${blogToDelete.id}`).expect(204);
+  });
+
+  test("After deletion, blogs length should decrement by 1", async () => {
+    const result = await api
+    .get(BLOGS_ENDPOINT)
+
+    const blogToDelete = result.body[0];
+    const initialLength = result.body.length;
+
+    await api.delete(`${BLOGS_ENDPOINT}/${blogToDelete.id}`)
+    
+    const response = await api
+    .get(BLOGS_ENDPOINT)
+    
+    expect(response.body).toHaveLength(initialLength-1)
+  });
+
+});
+
+describe("Update of a blog post", () => {
+
+  test("Blog update successful", async()=>{
+    const newBlog = {
+      title:"Masterpiece",
+      author:"Edsger W. Dijkstra",
+      url:"http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+      likes:12
+    }
+
+    await api.post(BLOGS_ENDPOINT)
+    .send(newBlog)
+    .expect(201)
+
+    const result = await api
+    .get(BLOGS_ENDPOINT)
+    .expect(200)
+
+    const blogToUpdate = result.body[0];
+
+    const updatedBlog = {
+      ...blogToUpdate,
+      likes: blogToUpdate.likes + 100
+    }
+
+    const response = await api
+                    .put(`${BLOGS_ENDPOINT}/${blogToUpdate.id}`)
+                    .send(updatedBlog)
+                    .expect(200)
+    expect(response.body).toEqual(updatedBlog);
   })
-})
+
+});
+
 
 afterAll(async () => {
   await mongoose.connection.close();
