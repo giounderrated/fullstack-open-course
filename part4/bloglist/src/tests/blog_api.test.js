@@ -89,7 +89,6 @@ test("Given missing likes property then set default value to 0",async ()=>{
   expect(response.body.likes).toBe(0)
 })
 
-
 test("Given missing title or url properties then return 400",async()=>{
   const blogWithNoUrlProperty = {
     title:"Title",
@@ -99,6 +98,15 @@ test("Given missing title or url properties then return 400",async()=>{
   .post(BLOGS_ENDPOINT)
   .send(blogWithNoUrlProperty)
   .expect(400)
+})
+
+describe("Deletion of a blog post",()=>{
+  test("given id then return status code 200", async()=>{
+    const id = initialBlogs[0]._id;
+    await api
+    .delete(`${BLOGS_ENDPOINT}/${id}`)
+    .expect(200)
+  })
 })
 
 afterAll(async () => {
