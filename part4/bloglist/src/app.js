@@ -9,7 +9,9 @@ const mongoose = require('mongoose')
 
 
 const blogsRouter = require("./controllers/Blog.controller");
-const BLOGS_PATH = "/api/blogs/";
+const usersRouter = require("./controllers/Users.controller");
+const BLOGS_PATH = "/api/blogs";
+const USERS_PATH = "/api/users"
 
 app.use(cors());
 app.use(express.static("build"));
@@ -17,6 +19,8 @@ app.use(express.json());
 app.use(middleware.requestLogger);
 
 app.use(BLOGS_PATH, blogsRouter);
+app.use(USERS_PATH, usersRouter);
+
 
 mongoose.set("strictQuery", false);
 
