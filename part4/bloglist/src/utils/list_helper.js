@@ -1,3 +1,5 @@
+const User = require('../models/User.model')
+
 const initialBlogs = [
   {
     id:"5a422a851b54a676234d17f7",
@@ -46,11 +48,15 @@ const mostBlogs = (blogs) => {
     return group;
   }, []);
   const authors = Object.values(groupByAuthor)
-  console.log(authors)
   const max = authors.reduce((prev, current)=>{
     return prev.blogs > current.blogs ? prev : current
   },{})
   return max;  
+}
+
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(u => u.toJSON())
 }
 
 module.exports = {
@@ -58,5 +64,6 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
-  initialBlogs
+  initialBlogs,
+  usersInDb
 };
