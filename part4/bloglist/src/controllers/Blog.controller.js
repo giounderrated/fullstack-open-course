@@ -11,7 +11,8 @@ blogsRouter.get("/", async (request, response) => {
 
 blogsRouter.post("/", async (request, response) => {
 
-  const token = getTokenFromRequest(request);
+  const token = request['token']
+  console.log(token)
   if(!token){
     return response.status(401).send()
   }
@@ -85,12 +86,5 @@ validateParams = ({ title, author, url, userId }) => {
   );
 };
 
-const getTokenFromRequest = (request)=>{
-  const authorization = request.get('Authorization')
-  if(authorization && authorization.startsWith('Bearer ')){
-    return authorization.replace('Bearer ', '')
-  }
-  return null
-}
 
 module.exports = blogsRouter;

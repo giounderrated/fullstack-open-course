@@ -18,6 +18,8 @@ app.use(express.static("build"));
 app.use(express.json());
 app.use(middleware.requestLogger);
 
+app.use(middleware.tokenExtractor)
+
 app.use(BLOGS_PATH, blogsRouter);
 app.use(USERS_PATH, usersRouter);
 app.use(AUTH_PATH, loginRouter);
