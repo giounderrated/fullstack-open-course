@@ -31,7 +31,7 @@ usersRouter.post("/", async (request, response) => {
 usersRouter.delete("/:id", async (request, response) => {
   const id = request.params.id;
   await User.findByIdAndDelete(id);
-  response.status(204);
+  response.status(204).send()
 });
 
 validateParams = ({ name, username, password }) => {
