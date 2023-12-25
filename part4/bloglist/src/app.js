@@ -16,9 +16,9 @@ const AUTH_PATH = "/api/auth/login";
 app.use(cors());
 app.use(express.static("build"));
 app.use(express.json());
-app.use(middleware.requestLogger);
 
-app.use(middleware.tokenExtractor)
+app.use(middleware.requestLogger);
+app.use(middleware.tokenExtractor);
 
 app.use(BLOGS_PATH, blogsRouter);
 app.use(USERS_PATH, usersRouter);
