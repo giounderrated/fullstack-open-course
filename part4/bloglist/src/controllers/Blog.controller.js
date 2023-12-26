@@ -24,7 +24,7 @@ blogsRouter.post("/", middleware.userExtractor, async (request, response) => {
     likes: likes === undefined ? 0 : likes,
     user: user.id,
   });
-  
+
   const savedBlog = await blog.save();
   user.blogs = user.blogs.concat(savedBlog);
   await user.save();
@@ -60,22 +60,13 @@ blogsRouter.delete(
   "/:id",
   middleware.userExtractor,
   async (request, response) => {
-    const token = request.token;
-    if (!token) {
-      return response.status(401).send();
-    }
-
-    const decodedToken = jwt.verify(token, process.env.SECRET);
-    if (!decodedToken.id) {
-      return response.status(401).json({
-        error: "Token invalid",
-      });
-    }
+    
+   const user = await request['user']
 
     const blogId = request.params.id;
 
     const blog = await Blog.findById(blogId);
-    if (blog.user.toString() !== decodedToken.id.toString()) {
+    if (blog.user.toString() !== user.id.toString()) {
       return response
         .status(401)
         .send({ error: "Invalid permissions to delete this blog" });
