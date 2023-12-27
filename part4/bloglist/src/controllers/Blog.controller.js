@@ -39,13 +39,21 @@ blogsRouter.get("/:id", async (request, response) => {
   response.status(200).json(blog);
 });
 
-blogsRouter.put("/:id", async (request, response) => {
+blogsRouter.put("/:id", middleware.userExtractor, async (request, response) => {
   const id = request.params.id;
 
   const exists = await Blog.findById(request.params.id);
 
   if (!exists) {
     response.status(404).send();
+  }
+
+  const user = await request["user"];
+  
+  if (exists.user.toString() !== user.id.toString()) {
+    return response
+      .status(401)
+      .send({ error: "Invalid permissions to update this blog" });
   }
 
   const body = request.body;
@@ -60,8 +68,7 @@ blogsRouter.delete(
   "/:id",
   middleware.userExtractor,
   async (request, response) => {
-    
-   const user = await request['user']
+    const user = await request["user"];
 
     const blogId = request.params.id;
 
@@ -74,6 +81,7 @@ blogsRouter.delete(
 
     await Blog.findByIdAndDelete(blogId);
     response.status(204).send();
+    er;
   }
 );
 
