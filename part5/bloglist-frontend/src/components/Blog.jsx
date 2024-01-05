@@ -1,6 +1,6 @@
 import { useState } from "react";
 import blogs from "../services/blogs";
-const Blog = ({ blog, onLike }) => {
+export const Blog = ({ blog, onLike }) => {
   const [visible, setVisible] = useState(false);
 
   const blogStyle = {
@@ -38,4 +38,3 @@ const Blog = ({ blog, onLike }) => {
   );
 };
 
-export default Blog;

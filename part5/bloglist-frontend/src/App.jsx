@@ -6,7 +6,7 @@ import { Error } from "./components/Error";
 import { LoginForm } from "./components/LoginForm";
 import Toggable from "./components/Toggable";
 import { BlogForm } from "./components/BlogForm";
-import { BlogList } from "./components/BlogList";
+import { Blog } from "./components/Blog";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -18,7 +18,7 @@ const App = () => {
   const createBlogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService.getAll().then((blogs) => setBlogs(blogs.sort((a,b)=>a.likes-b.likes)));
   }, []);
 
   const handleLogin = async (loginForm) => {
@@ -61,11 +61,11 @@ const App = () => {
           ...newBlogs[index],
           likes:updatedBlog.likes
         }
-        return newBlogs
+        return newBlogs.sort((a,b)=>a.likes-b.likes)
       }
       return prevBlogs
     })
-    console.log(blogs);
+    
   }
 
   return (
@@ -85,7 +85,11 @@ const App = () => {
             {user.name} logged in
             <button onClick={(event) => onLogout(event)}>Logout</button>
           </p>
-          <BlogList blogs={blogs} onLike={onLike}/>
+          <div>
+            {blogs.map((blog) => (
+              <Blog key={blog.id} blog={blog} onLike={onLike}/>
+            ))}
+          </div>
           <Toggable buttonLabel={"New Blog"} ref={createBlogFormRef}>
           <BlogForm
             createBlog={createBlog}
