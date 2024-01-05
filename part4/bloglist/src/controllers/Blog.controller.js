@@ -56,10 +56,16 @@ blogsRouter.put("/:id", middleware.userExtractor, async (request, response) => {
       .send({ error: "Invalid permissions to update this blog" });
   }
 
-  const body = request.body;
+  const {title,author,url,likes} = request.body;
+  
   const blog = {
-    ...body,
-  };
+    title,
+    author,
+    url,
+    likes,
+    user:exists.user
+  }
+
   const updated = await Blog.findByIdAndUpdate(id, blog, { new: true });
   response.status(200).json(updated);
 });
