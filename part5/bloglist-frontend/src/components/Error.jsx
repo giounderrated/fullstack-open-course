@@ -1,13 +1,13 @@
 export const Error = ({ error }) => {
   const styles = {
-    color: "red",
-    fontStyle: "italic",
+    color: 'red',
+    fontStyle: 'italic',
     fontSize: 16,
-    borderColor:"red",
+    borderColor:'red',
     border: 2
-  };
-  if (!error) {
-    return null;
   }
-  return <div style={styles}>{error}</div>;
-};
+  if (!error) {
+    return null
+  }
+  return <div style={styles}>{error}</div>
+}

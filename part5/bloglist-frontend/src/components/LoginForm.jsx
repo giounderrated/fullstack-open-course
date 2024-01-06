@@ -1,28 +1,28 @@
-import { useState } from "react";
+import { useState } from 'react'
 
-export const LoginForm = ({login}) => {
+export const LoginForm = ({ login }) => {
 
   const [loginForm, setLoginForm] = useState({
-    username: "",
-    password: "",
-  });
+    username: '',
+    password: '',
+  })
 
-  const handleLogin = (event) =>{
-    event.preventDefault();
+  const handleLogin = (event) => {
+    event.preventDefault()
     login(loginForm)
     setLoginForm({
-      username: "",
-      password: "",
+      username: '',
+      password: '',
     })
   }
 
-  const handleValueChange = (event) =>{
-    const {name, value} = event.target;
+  const handleValueChange = (event) => {
+    const { name, value } = event.target
     setLoginForm({
       ...loginForm,
       [name]:value
     })
-  } 
+  }
 
   return (
     <div>
@@ -49,5 +49,5 @@ export const LoginForm = ({login}) => {
         <button type="submit">Submit</button>
       </form>
     </div>
-  );
-};
+  )
+}
