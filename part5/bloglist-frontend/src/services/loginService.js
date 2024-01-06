@@ -1,19 +1,23 @@
 import axios from "axios";
 
-const baseUrl = '/api/auth/login'
-const KEY = 'user';
+const baseUrl = "/api/auth/login";
+const USER_KEY = "user";
 
-const login = async(credentials) =>{
-  const response = await axios.post(baseUrl,credentials)
-  return response.data
-}
+const login = async (credentials) => {
+  const response = await axios.post(baseUrl, credentials);
+  return response.data;
+};
 
-const saveUserDetails = (user) =>{
-  window.localStorage.setItem(KEY, user)
-}
+const saveUserDetails = (user) => {
+  window.localStorage.setItem(USER_KEY, JSON.stringify(user));
+};
 
-const logout = () =>{
-  window.localStorage.removeItem(KEY)
-}
+const getLoggedUser = () => {
+  return JSON.parse(window.localStorage.getItem(USER_KEY))
+};
 
-export default {login, saveUserDetails,logout}
+const logout = () => {
+  window.localStorage.removeItem(USER_KEY);
+};
+
+export default { login, saveUserDetails, logout, getLoggedUser };

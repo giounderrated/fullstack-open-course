@@ -8,8 +8,8 @@ const setToken = (newToken) => {
 };
 
 const getAll = async () => {
-  const request = await axios.get(baseUrl);
-  return request.data
+  const response = await axios.get(baseUrl);
+  return response.data;
 };
 
 const create = async (newBlog) => {
@@ -18,15 +18,20 @@ const create = async (newBlog) => {
 };
 
 const update = async (blogToUpdate) => {
-  const endpoint = `${baseUrl}/${blogToUpdate.id}`
+  const endpoint = `${baseUrl}/${blogToUpdate.id}`;
   const response = await axios.put(endpoint, blogToUpdate, getHeaders());
   return response.data;
 };
 
-const getHeaders = () =>{
-  return{
-    headers: { Authorization: token }
-  };
-}
+const remove = async (blogId) => {
+  const endpoint = `${baseUrl}/${blogId}`;
+  await axios.delete(endpoint, getHeaders());
+};
 
-export default { getAll, create, update, setToken };
+const getHeaders = () => {
+  return {
+    headers: { Authorization: token },
+  };
+};
+
+export default { getAll, create, update, remove, setToken };

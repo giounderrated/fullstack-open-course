@@ -65,7 +65,12 @@ const App = () => {
       }
       return prevBlogs
     })
-    
+  }
+
+  const onDelete = (blogId) =>{
+    setBlogs(prevBlogs=>{
+      return prevBlogs.filter(blog=>blog.id!=blogId)
+    })
   }
 
   return (
@@ -87,7 +92,7 @@ const App = () => {
           </p>
           <div>
             {blogs.map((blog) => (
-              <Blog key={blog.id} blog={blog} onLike={onLike}/>
+              <Blog key={blog.id} blog={blog} onLike={onLike} onDelete={onDelete} />
             ))}
           </div>
           <Toggable buttonLabel={"New Blog"} ref={createBlogFormRef}>

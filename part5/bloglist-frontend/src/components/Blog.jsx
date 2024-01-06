@@ -1,6 +1,7 @@
 import { useState } from "react";
 import blogs from "../services/blogs";
-export const Blog = ({ blog, onLike }) => {
+import loginService from "../services/loginService";
+export const Blog = ({ blog, onLike, onDelete }) => {
   const [visible, setVisible] = useState(false);
 
   const blogStyle = {
@@ -18,6 +19,19 @@ export const Blog = ({ blog, onLike }) => {
     onLike(returned)
   }
 
+  const canDelete = () =>{
+    const user = loginService.getLoggedUser()
+    return blog.user.name == user.name
+  }
+
+  const handleDelete = async (event) =>{
+    event.preventDefault()
+    const confirmation =  window.confirm("Are you sure you want to remove the blog"+blog.title)
+    if(!confirmation) return
+    await blogs.remove(blog.id)
+    onDelete(blog.id)
+  }
+
   return (
     <div style={blogStyle}>
       <h3>
@@ -32,8 +46,10 @@ export const Blog = ({ blog, onLike }) => {
           <p>Url: {blog.url}</p>
           <p>Likes: {blog.likes} <button onClick={handleLike}>Like</button></p>
           <p>Created by {blog.user.name}</p>
+          
         </div>
       )}
+      {canDelete() &&  <button onClick={handleDelete} >Remove</button>}
     </div>
   );
 };

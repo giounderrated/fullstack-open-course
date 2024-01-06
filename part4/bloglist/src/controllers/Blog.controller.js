@@ -87,7 +87,6 @@ blogsRouter.delete(
 
     await Blog.findByIdAndDelete(blogId);
     response.status(204).send();
-    er;
   }
 );
 
