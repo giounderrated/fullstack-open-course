@@ -92,7 +92,7 @@ const App = () => {
           </p>
           <div>
             {blogs.map((blog) => (
-              <Blog key={blog.id} blog={blog} onLike={onLike} onDelete={onDelete} />
+              <Blog key={blog.id} blog={blog} onLike={onLike} onDelete={onDelete} currentUser={user}/>
             ))}
           </div>
           <Toggable buttonLabel={'New Blog'} ref={createBlogFormRef}>
