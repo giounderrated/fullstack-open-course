@@ -1,7 +1,6 @@
 import React from "react";
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { Blog } from "./Blog";
 
 describe("<Blog/>", () => {
@@ -47,16 +46,23 @@ describe("<Blog/>", () => {
     expect(container).toHaveTextContent("Head First Java - James Gosling");
   });
 
-  test("blog's url and number of likes are hide at first", async () => {
+  test("blog's url and number of likes are hide at first", () => {
     const div = container.querySelector(".blog-details");
-    expect(div).toHaveStyle('display: none')
+    expect(div).toHaveStyle("display: none");
   });
 
-  test("blog's url and number of likes are shown when button is clicked", async () => {
-    const user = userEvent.setup();
-    const button = screen.getByText("Show Details")
-    await user.click(button);
+  test("blog's url and number of likes are shown when button is clicked", () => {
+    const button = screen.getByText("Show Details");
+    fireEvent.click(button)
     const div = container.querySelector(".blog-details");
     expect(div).not.toHaveStyle("display: none");
+  });
+
+  test("when like button clicked twice, then event handler the component received is called twice", () => {
+    const button = screen.getByText("Like");
+    fireEvent.click(button)
+    fireEvent.click(button)
+    
+    expect(mockIncreaseLikes.mock.calls).toHaveLength(2)
   });
 });

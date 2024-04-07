@@ -49,7 +49,7 @@ export const Blog = ({ blog, onLike, onDelete, currentUser }) => {
       <div className="blog-details" style={showWhenVisible}>
         <p>{blog.url}</p>
         <p>
-          {blog.likes} <button onClick={handleLike}>Like</button>
+          {blog.likes} <button onClick={handleLike}  >Like</button>
         </p>
         <p>{blog.user.name}</p>
       </div>
