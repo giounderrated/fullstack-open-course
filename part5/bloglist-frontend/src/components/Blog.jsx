@@ -38,7 +38,7 @@ export const Blog = ({ blog, onLike, onDelete, currentUser }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <article style={blogStyle} id={blog.id}>
       <p className="blog-author">
         {blog.title} - {blog.author}
         <button onClick={() => setVisible(!visible)}>
@@ -49,12 +49,12 @@ export const Blog = ({ blog, onLike, onDelete, currentUser }) => {
       <div className="blog-details" style={showWhenVisible}>
         <p>{blog.url}</p>
         <p>
-          {blog.likes} <button onClick={handleLike}  >Like</button>
+          {blog.likes} <button onClick={handleLike}>Like</button>
         </p>
         <p>{blog.user.name}</p>
       </div>
       {canDelete() && <button onClick={handleDelete}>Remove</button>}
-    </div>
+    </article>
   );
 };
 

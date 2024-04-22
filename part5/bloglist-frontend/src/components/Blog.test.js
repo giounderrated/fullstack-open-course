@@ -2,6 +2,10 @@ import React from "react";
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { Blog } from "./Blog";
+import userEvent from '@testing-library/user-event'
+
+jest.mock('../services/blogs')
+
 
 describe("<Blog/>", () => {
   let container;
@@ -38,6 +42,10 @@ describe("<Blog/>", () => {
     ).container;
   });
 
+  afterAll(()=>{
+    jest. clearAllMocks()
+  })
+
   test("Render a Blog", () => {
     expect(container).toHaveTextContent("Head First Java - James Gosling");
   });
@@ -58,11 +66,11 @@ describe("<Blog/>", () => {
     expect(div).not.toHaveStyle("display: none");
   });
 
-  test("when like button clicked twice, then event handler the component received is called twice", () => {
+  test("when like button clicked twice, then event handler the component received is called twice",async () => {
     const button = screen.getByText("Like");
-    fireEvent.click(button)
-    fireEvent.click(button)
-    
-    expect(mockIncreaseLikes.mock.calls).toHaveLength(2)
+    const user = userEvent.setup()
+    await user.click(button) 
+    await user.click(button) 
+    expect(mockIncreaseLikes).toHaveBeenCalledTimes(2)
   });
 });
