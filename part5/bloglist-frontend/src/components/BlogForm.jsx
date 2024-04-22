@@ -28,7 +28,7 @@ export const BlogForm = ({ createBlog }) => {
   }
 
   return (
-    <form onSubmit={onCreateBlog}>
+    <form className='formDiv'  onSubmit={onCreateBlog}>
       <div>
         <label htmlFor="title">Title:</label>
         <input

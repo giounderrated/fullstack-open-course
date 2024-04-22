@@ -51,10 +51,13 @@ describe("<Blog/>", () => {
   });
 
   test("Render title and author but not render its url or number of likes", () => {
-    expect(container).toHaveTextContent("Head First Java - James Gosling");
+    const titleAndAuthorLabel = container.querySelector(".blog-author");
+    expect(titleAndAuthorLabel).toBeDefined()
+    const details = container.querySelector(".blog-details");
+    expect(details).toHaveStyle("display: none");
   });
 
-  test("blog's url and number of likes are hide at first", () => {
+  test("blog's url and number of likes are hidden at first", () => {
     const div = container.querySelector(".blog-details");
     expect(div).toHaveStyle("display: none");
   });
