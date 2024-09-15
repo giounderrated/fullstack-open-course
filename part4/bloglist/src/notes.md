@@ -7,3 +7,14 @@
 ## commands
 - SUPERTEST
 - ``` npm test -- -t "{testName}"  ```
+
+### To setup .env: 
+
+- Run
+
+```sh
+copy sample.env .env
+```
+- Get the database url from mongodbcloud, use gio personal account
+- Hit Connect
+- Get the connection string for the fullstakopen database 
